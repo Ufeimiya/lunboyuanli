@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 500px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 500px;
+            height: 200px;
+            /*overflow: hidden;*/
+            position: relative;
+        }
+
+        .screen li {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 3000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="all" id='box'>
+    <div class="screen">
+        <ul>
+            <li><img src="images/1.jpg" width="500" height="200"/></li>
+            <li><img src="images/2.jpg" width="500" height="200"/></li>
+            <li><img src="images/3.jpg" width="500" height="200"/></li>
+            <li><img src="images/4.jpg" width="500" height="200"/></li>
+            <li><img src="images/5.jpg" width="500" height="200"/></li>
+        </ul>
+        <ol>
+        </ol>
+    </div>
+    <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+</div>
+<script>
+    //要做实现找人
+    var box = document.getElementById("box");
+    var screen = box.children[0];
+    var ul = screen.children[0];
+    var ulLis = ul.children;
+    var ol = screen.children[1];
+    var arr = document.getElementById("arr");
+    var arrRight = document.getElementById("right");
+    var arrLeft = document.getElementById("left");
+    //图片宽度
+    var imgWidth = screen.offsetWidth;
+    var timer = null;
+
+
+    for (var i = 0; i < ulLis.length; i++) {
+        var li = document.createElement("li");
+        li.innerHTML = i + 1;
+        ol.appendChild(li);
+    }
+    var olLis = ol.children;
+    olLis[0].className = "current";
+    var firstImg = ulLis[0].cloneNode(true);
+    ul.appendChild(firstImg);
+    for (var j = 0; j < olLis.length; j++) {
+        olLis[j].index = j;
+        olLis[j].onmouseover = function () {
+            for (var k = 0; k < olLis.length; k++) {
+                olLis[k].className = "";
+            }
+            this.className = "current";
+            var target = -this.index * imgWidth;
+            animate(ul, target);
+
+            //把当前按钮的索引 赋值给pic
+            //pic = this.index;
+            //还要把当前按钮的索引 赋值给square
+            //square = this.index;
+            pic = square = this.index;
+        }
+    }
+
+    box.onmouseover = function () {
+        arr.style.display = "block";
+        clearInterval(timer);
+    }
+    box.onmouseout = function () {
+        arr.style.display = "none";
+        timer = setInterval(playNext, 1000);
+    }
+
+    //3.2点击右侧按钮 将ul移动到对应位置
+    var pic = 0;//用于表示应该向左移动的图片的张数 也表示当前图片的索引
+    var square = 0;//用于保存当前应该亮起的按钮
+    arrRight.onclick = function () {
+        playNext();
+    }
+    arrLeft.onclick = function () {
+        //如果pic等于第一张图片的索引 再点击就该跳转到最后了
+        if (pic == 0) {
+            //往左移动了ulLis.length - 1张
+            //也就是往左移动了(ulLis.length - 1) * imgWidth
+            ul.style.left = -(ulLis.length - 1) * imgWidth + "px";
+            pic = ulLis.length - 1;
+        }
+        pic--;
+        //目标 和 pic有关 和 图片宽度有关 而且是 负数
+        var target = -pic * imgWidth;
+        animate(ul, target);
+
+        //按钮也跟着走
+        //square 表示当前应该亮起的按钮
+        //如果大于第一个按钮的索引就减 否则就该等于最后一个按钮的索引
+        if (square > 0) {
+            square--;
+        } else {
+            square = olLis.length - 1;
+        }
+
+        //按钮排他
+        //干掉所有人
+        for (var i = 0; i < olLis.length; i++) {
+            olLis[i].className = "";
+        }
+        //留下当前的
+        olLis[square].className = "current";
+
+    }
+
+    //4.添加自动滚动
+    timer = setInterval(playNext, 1000);
+
+    function playNext() {
+        //如果pic等于最后一张图片的索引 再点击就该跳转了
+        if (pic == ulLis.length - 1) {
+            ul.style.left = 0;
+            pic = 0;
+        }
+        pic++;
+        //目标 和 pic有关 和 图片宽度有关 而且是 负数
+        var target = -pic * imgWidth;
+        animate(ul, target);
+
+        //按钮也跟着走
+        //square 表示当前应该亮起的按钮
+        //如果小于最后一个按钮的索引 就加否则就该等于0 了
+        if (square < olLis.length - 1) {
+            square++;
+        } else {
+            square = 0;
+        }
+
+        //按钮排他
+        //干掉所有人
+        for (var i = 0; i < olLis.length; i++) {
+            olLis[i].className = "";
+        }
+        //留下当前的
+        olLis[square].className = "current";
+
+    }
+
+
+    function animate(obj, target) {
+        clearInterval(obj.timer);
+        obj.timer = setInterval(function () {
+            var leader = obj.offsetLeft;
+            var step = 35;
+            step = leader < target ? step : -step;
+            if (Math.abs(target - leader) > Math.abs(step)) {
+                leader = leader + step;
+                obj.style.left = leader + "px";
+            } else {
+                obj.style.left = target + "px";
+                clearInterval(obj.timer);
+            }
+        }, 15)
+    }
+</script>
+</body>
+</html>

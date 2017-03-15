@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #one {
+            width: 500px;
+            height: 1000px;
+            background: red;
+            margin: 0 auto;
+        }
+
+        #it1 {
+            width: 500px;
+            height: 500px;
+            background: green;
+        }
+
+        #it2 {
+            width: 500px;
+            height: 500px;
+            background: blue;
+        }
+
+        .fa {
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .box {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+
+        }
+
+        .box a {
+            display: block;
+            width: 50px;
+            height: 50px;
+        }
+
+        .box a:nth-child(1) {
+            background: red;
+        }
+
+        .box a:nth-child(2) {
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+<div class='fa'>
+    <div id='one'>
+        <div id='it1'></div>
+        <div id='it2'></div>
+    </div>
+    <div class=box>
+        <a href="javascript:;">上</a>
+        <a href="javascript:;">下</a>
+    </div>
+</div>
+
+
+<script>
+     var one = document.getElementById('one');
+     one.style.offsetTop = 20
+
+
+
+</script>
+</body>
+</html>

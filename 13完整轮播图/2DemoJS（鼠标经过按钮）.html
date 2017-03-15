@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 500px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 500px;
+            height: 200px;
+            /*overflow: hidden;*/
+            position: relative;
+        }
+
+        .screen li {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 3000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="all" id='box'>
+    <div class="screen">
+        <ul>
+            <li><img src="images/1.jpg" width="500" height="200"/></li>
+            <li><img src="images/2.jpg" width="500" height="200"/></li>
+            <li><img src="images/3.jpg" width="500" height="200"/></li>
+            <li><img src="images/4.jpg" width="500" height="200"/></li>
+            <li><img src="images/5.jpg" width="500" height="200"/></li>
+        </ul>
+        <ol>
+        </ol>
+    </div>
+    <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+</div>
+<script>
+    //要做实现找人
+    var box = document.getElementById("box");
+    var screen = box.children[0];
+    var ul = screen.children[0];
+    var ulLis = ul.children;
+    var ol = screen.children[1];
+    var arr = document.getElementById("arr");
+    //图片宽度
+    var imgWidth = screen.offsetWidth;
+    //alert(imgWidth);
+
+
+    for (var i = 0; i < ulLis.length; i++) {
+        var li = document.createElement("li");
+        li.innerHTML = i + 1;
+        ol.appendChild(li);
+    }
+    var olLis = ol.children;
+    olLis[0].className = "current";
+    var firstImg = ulLis[0].cloneNode(true);
+    ul.appendChild(firstImg);
+
+    //2.鼠标经过 按钮排他
+    for (var j = 0; j < olLis.length; j++) {
+        olLis[j].index = j;
+        olLis[j].onmouseover = function () {
+            //干掉所有人
+            for (var k = 0; k < olLis.length; k++) {
+                olLis[k].className = "";
+            }
+            //留下我自己
+            this.className = "current";
+            //根据按钮的索引号去移动ul
+            //target 目标 和 索引号有关 和 图片宽度有关 而且 是 负数
+            var target = -this.index * imgWidth;
+            animate(ul, target);
+
+        }
+    }
+
+
+    function animate(obj, target) {
+        clearInterval(obj.timer);
+        obj.timer = setInterval(function () {
+            //leader = leader + step
+            var leader = obj.offsetLeft;
+            var step = 35;
+//            //当前位置在目标位置的左侧 所以应该往右走
+//            if (leader < target) {
+//                step = step;
+//            }
+//            //当前位置在目标位置的右侧 所以应该往左走
+//            if (leader > target) {
+//                step = -step;
+//            }
+            step = leader < target ? step : -step;
+            //如果对象的位置在目标的左侧 对盒子的位置进行设置
+            //如果对象到目标的距离 大于 一步能够迈出的距离
+            if (Math.abs(target - leader) > Math.abs(step)) {
+                leader = leader + step;
+                obj.style.left = leader + "px";
+            } else {
+                //快要到达目标的时候 手动把对象放置到目标位置上
+                obj.style.left = target + "px";
+                //到达目标就清理定时器
+                clearInterval(obj.timer);
+            }
+        }, 15)
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #demo {
+            width: 100px;
+
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+<div id="demo" style="height: 100px;"></div>
+<script>
+    var demo = document.getElementById("demo");
+    console.log(demo.offsetHeight);//数值型
+    console.log(demo.style.height);//字符串 而且带有单位
+
+    //demo.style.height = "200px";//可以对对象的属性进行设置
+    demo.offsetHeight = 200;//只读属性 不能对对象的样式进行设置
+</script>
+</body>
+</html>

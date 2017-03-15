@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+<button id="btn1">奔跑到200吧盒子</button>
+<button id="btn2">奔跑到400吧盒子</button>
+<div id="box"></div>
+<script>
+    var btn = document.getElementById("btn");
+    var box = document.getElementById("box");
+    var timer = null;
+
+
+    //需求：能够让 任意对象 移动到 指定位置
+    function animate(obj, target) {
+        clearInterval(obj.timer);
+        obj.timer = setInterval(function () {
+            //leader = leader + step
+            var leader = obj.offsetLeft;
+            var step = 10;
+            //如果没有到达目标就 对盒子的位置进行设置
+            if (leader < target) {
+                leader = leader + step;
+                obj.style.left = leader + "px";
+            } else {
+                //到达目标就清理定时器
+                clearInterval(obj.timer);
+            }
+            console.log("代码还在执行");
+        }, 15)
+    }
+
+
+    //点击按钮让盒子跑到400的位置
+    btn.onclick = function () {
+        clearInterval(timer);
+        timer = setInterval(function () {
+            //leader = leader + step
+            var target = 400;
+            var leader = box.offsetLeft;
+            var step = 10;
+            //如果没有到达目标就 对盒子的位置进行设置
+            if (leader < target) {
+                leader = leader + step;
+                box.style.left = leader + "px";
+            } else {
+                //到达目标就清理定时器
+                clearInterval(timer);
+            }
+            console.log("代码还在执行");
+        }, 15)
+    }
+
+</script>
+</body>
+</html>

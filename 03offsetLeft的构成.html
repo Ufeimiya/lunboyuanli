@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #father {
+            margin-left: 100px;
+            border-left: 10px solid green;
+            padding-left: 50px;
+            width: 200px;
+            height: 200px;
+            background-color: yellow;
+            position: absolute;
+        }
+
+        #son {
+            margin-left: 50px;
+            border-left: 10px solid red; /*从border左侧开始*/
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+        }
+
+    </style>
+</head>
+<body>
+<div id="father">
+    <div id="son"></div>
+</div>
+<script>
+    var son = document.getElementById("son");
+    console.log(son.offsetLeft);
+    //如果父级都没有定位 会一直找到body
+    //如果父级有定位 是到父级左侧的距离
+</script>
+</body>
+</html>
